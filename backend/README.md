@@ -1,4 +1,6 @@
-# Tokopedia Play Clone - Backend
+<h1 align="center">Tokopedia Play Backend</h1>
+
+<p align="center">A video streaming platform inspired by Tokopedia's design, showcasing videos, products, and interactive comments.</p>
 
 ## Table of Contents
 - [Introduction](#introduction)
