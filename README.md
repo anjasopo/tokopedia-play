@@ -24,6 +24,10 @@
 
 Tokopedia Play Clone is a video streaming platform that brings the immersive experience of Tokopedia's video content to life. This project replicates key features of Tokopedia Play, including videos, products, comments, and more.
 
+<p align="center">
+  <img src="Tokokpedia Play - Clone.png" alt="Homepage">
+</p>
+
 ## Try It Out
 
 Experience the Tokopedia Play Clone frontend by visiting the following URL:
