@@ -8,14 +8,15 @@ mongoose.set('strictQuery', true);
 
 export const connectDatabase = async (): Promise<typeof mongoose> => {
   try {
-    if (mongoose.connection.readyState === 1) {
+    const readyState = mongoose.connection.readyState as number;
+    if (readyState === 1) {
       return mongoose;
     }
     
     // If connection is in progress, wait briefly
-    if (mongoose.connection.readyState === 2) {
+    if (readyState === 2) {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      if (mongoose.connection.readyState === 1) {
+      if ((mongoose.connection.readyState as number) === 1) {
         return mongoose;
       }
     }
