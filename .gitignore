@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+frontend/dist/
+backend/dist/
+
+# Environment files (contains secrets)
+.env
+frontend/.env
+backend/.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+nul
+*.log
+npm-debug.log*
