@@ -1,8 +1,8 @@
 const DEFAULT_ATLAS_URI =
-  'mongodb://anjasopo:anjasopo@ac-eqcxc6l-shard-00-00.0os0bqa.mongodb.net:27017,ac-eqcxc6l-shard-00-01.0os0bqa.mongodb.net:27017,ac-eqcxc6l-shard-00-02.0os0bqa.mongodb.net:27017/tokopedia-play?ssl=true&authSource=admin&retryWrites=true&w=majority';
+  'mongodb+srv://anjasopo:anjasopo@cluster0.0os0bqa.mongodb.net/tokopedia-play?retryWrites=true&w=majority';
 
 export const validateEnv = () => {
-  // Safe environment validation that never crashes production
+  // Safe environment validation for serverless
 };
 
 export const config = {
