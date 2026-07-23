@@ -1,15 +1,16 @@
 {
   "version": 2,
+  "buildCommand": "",
   "builds": [
     {
-      "src": "backend/src/index.ts",
+      "src": "backend/src/serverless.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "backend/src/index.ts"
+      "dest": "backend/src/serverless.ts"
     }
   ]
 }
