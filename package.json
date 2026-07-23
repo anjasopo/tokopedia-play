@@ -1,0 +1,14 @@
+{
+  "name": "tokopedia-play-root",
+  "version": "2.0.0",
+  "description": "Root package runner for Tokopedia Play Backend",
+  "main": "backend/dist/index.js",
+  "scripts": {
+    "preinstall": "npm install --prefix backend",
+    "build": "npm run build --prefix backend",
+    "start": "npm start --prefix backend"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
