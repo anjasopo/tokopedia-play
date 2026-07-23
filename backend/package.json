@@ -1,22 +1,37 @@
 {
-  "name": "tokped-play",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "tokopedia-play-backend",
+  "version": "2.0.0",
+  "description": "Tokopedia Play Clone Backend API Server with Socket.IO & Express",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "seed": "ts-node src/seeders/seed.ts"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "mongodb": "^5.7.0",
-    "mongoose": "^7.4.1",
-    "nodemon": "^3.0.1"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0",
+    "joi": "^17.12.2",
+    "mongoose": "^8.2.3",
+    "pino": "^8.19.0",
+    "pino-http": "^9.0.0",
+    "socket.io": "^4.7.5",
+    "swagger-ui-express": "^5.0.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.30",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/yamljs": "^0.2.34",
+    "pino-pretty": "^11.3.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.3"
   }
 }
