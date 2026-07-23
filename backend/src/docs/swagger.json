@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tokopedia Play Clone API",
+    "version": "2.0.0",
+    "description": "API documentation for Tokopedia Play Clone video streaming & live shopping platform."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/videos": {
+      "get": {
+        "summary": "Get all videos or search videos",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful response" }
+        }
+      }
+    },
+    "/videos/{videoId}": {
+      "get": {
+        "summary": "Get video details by videoID",
+        "parameters": [
+          {
+            "name": "videoId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful response" },
+          "404": { "description": "Video not found" }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Get products list",
+        "parameters": [
+          {
+            "name": "videoID",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful response" }
+        }
+      }
+    },
+    "/comments": {
+      "get": {
+        "summary": "Get comments for a video",
+        "parameters": [
+          {
+            "name": "videoID",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful response" }
+        }
+      },
+      "post": {
+        "summary": "Post a new comment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "comment", "videoID"],
+                "properties": {
+                  "username": { "type": "string", "example": "Anjas" },
+                  "comment": { "type": "string", "example": "Wah murah banget!" },
+                  "videoID": { "type": "string", "example": "vid-1" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Comment created" }
+        }
+      }
+    }
+  }
+}

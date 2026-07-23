@@ -1,38 +1,23 @@
-require("dotenv").config();
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const cors = require("cors");
+require('dotenv').config();
 
-const app = express();
-const port = 3000;
+const { validateEnv, config } = require('./src/config/environment');
+const { connectDatabase } = require('./src/config/database');
+const createApp = require('./src/app');
 
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-app.use(cors());
+const startServer = async () => {
+  try {
+    validateEnv();
+    await connectDatabase();
 
-mongoose.connect(process.env.DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+    const app = createApp();
 
-const database = mongoose.connection;
+    app.listen(config.port, () => {
+      console.log(`Server started at http://localhost:${config.port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
+  }
+};
 
-database.on("error", (error) => {
-  console.error("MongoDB connection error:", error);
-});
-
-database.once("open", () => {
-  console.log("Connected to MongoDB");
-});
-
-const routes = require("./src/routes/routes");
-app.use("/api", routes);
-
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
-});
+startServer();

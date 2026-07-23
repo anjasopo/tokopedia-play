@@ -1,131 +1,137 @@
-<h1 align="center">Tokopedia Play Backend</h1>
+<h1 align="center">Tokopedia Play Backend v2.0</h1>
 
-<p align="center">A video streaming platform inspired by Tokopedia's design, showcasing videos, products, and interactive comments.</p>
+<p align="center">
+  <b>Node.js + Express + TypeScript API Server with Socket.IO Real-time Gateway</b>
+</p>
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Database Structure](#database-structure)
-- [API Structure](#api-structure)
-- [List of API Endpoints](#list-of-api-endpoints)
-- [How to Run Locally](#how-to-run-locally)
+<p align="center">
+  <img src="https://img.shields.io/badge/Express-4.19-000000?style=flat-square&logo=express&logoColor=white" alt="Express">
+  <img src="https://img.shields.io/badge/TypeScript-5.4-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Socket.io-4.7-010101?style=flat-square&logo=socketdotio&logoColor=white" alt="Socket.io">
+  <img src="https://img.shields.io/badge/MongoDB-8.2-47A248?style=flat-square&logo=mongodb&logoColor=white" alt="MongoDB">
+</p>
 
-## Introduction
+---
 
-This repository contains the backend implementation of the Tokopedia Play Clone, a video streaming platform. The backend is built using Node.js, Express.js, and MongoDB.
+## Tech Stack
 
-## Database Structure
+| Technology | Purpose |
+|---|---|
+| Express 4.19 | HTTP API Framework |
+| TypeScript 5.4 | Type Safety |
+| Mongoose 8.2 | MongoDB ODM |
+| Socket.IO 4.7 | Real-time WebSocket Gateway |
+| Pino | Structured JSON Logging |
+| Helmet | Security Headers |
+| express-rate-limit | Rate Limiting |
+| Swagger UI | Interactive API Docs |
+| Joi | Request Validation |
 
-The MongoDB database used for this project contains three collections: `Video`, `Product`, and `Comment`.
+## Architecture
 
-### Video Collection
+```
+src/
+├── config/          # Database & environment configuration
+├── controllers/     # Route handlers (Video, Product, Comment)
+├── docs/            # OpenAPI / Swagger specification
+├── middlewares/      # Error handler, validation, rate limiter
+├── models/          # Mongoose schemas & TypeScript interfaces
+├── routes/          # Express route definitions
+├── seeders/         # Database sample data seeder
+├── services/        # Business logic layer
+├── socket/          # Socket.IO real-time engine
+├── utils/           # Logger, ApiResponse, ApiError helpers
+├── validators/      # Joi validation schemas
+├── app.ts           # Express app factory
+└── index.ts         # Server entry point (HTTP + Socket.IO)
+```
 
-The `Video` collection stores information about the videos available on the platform. Each video document has the following fields:
+## Database Collections
 
-- `videoID`: A unique identifier for the video.
-- `urlImageThumbnail`: The URL of the video's thumbnail image.
-- `titleImageThumbnail`: The title of the video.
+### Video
 
-### Product Collection
+| Field | Type | Description |
+|---|---|---|
+| `videoID` | String | Unique video identifier |
+| `urlImageThumbnail` | String | Thumbnail image URL |
+| `titleImageThumbnail` | String | Video title |
+| `channelName` | String | Streamer channel name |
+| `channelAvatar` | String | Streamer avatar URL |
+| `viewsCount` | Number | Live viewer count |
+| `likesCount` | Number | Total likes |
+| `isLive` | Boolean | Currently streaming flag |
+| `videoUrl` | String | YouTube embed URL |
 
-The `Product` collection stores information about the products related to the videos. Each product document has the following fields:
+### Product
 
-- `productID`: A unique identifier for the product.
-- `urlProduct`: The URL of the product's image.
-- `titleProduct`: The title of the product.
-- `priceProduct`: The price of the product.
-- `videoID`: The ID of the video that the product is related to.
+| Field | Type | Description |
+|---|---|---|
+| `productID` | String | Unique product identifier |
+| `urlProduct` | String | Product image URL |
+| `titleProduct` | String | Product title |
+| `priceProduct` | Number | Sale price (IDR) |
+| `originalPrice` | Number | Original price before discount |
+| `discountPercent` | Number | Discount percentage |
+| `rating` | Number | Product rating (1-5) |
+| `videoID` | String | Related video ID |
 
-### Comment Collection
+### Comment
 
-The `Comment` collection stores user comments for the videos. Each comment document has the following fields:
+| Field | Type | Description |
+|---|---|---|
+| `username` | String | Commenter name |
+| `comment` | String | Comment text |
+| `videoID` | String | Related video ID |
+| `userBadge` | String | Badge label (Top Spender, etc.) |
 
-- `username`: The username of the user who submitted the comment.
-- `comment`: The content of the comment.
-- `timestamp`: The timestamp when the comment was submitted.
-- `videoID`: The ID of the video that the comment is related to.
+## API Endpoints
 
-## API Structure
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/videos` | List all videos (supports `?search=`) |
+| `GET` | `/api/videos/:videoId` | Get video detail by ID |
+| `GET` | `/api/products` | List products (supports `?videoID=` and `?search=`) |
+| `GET` | `/api/products/:productId` | Get product detail by ID |
+| `GET` | `/api/comments` | List comments (supports `?videoID=` and `?search=`) |
+| `POST` | `/api/comments` | Submit a new comment |
+| `GET` | `/api-docs` | Interactive Swagger UI |
 
-The backend follows a RESTful API design, using Express.js to handle routes and controllers to handle the logic for each endpoint.
+### Socket.IO Events
 
-- The `videoController.js` handles video-related API endpoints.
-- The `productController.js` handles product-related API endpoints.
-- The `commentController.js` handles comment-related API endpoints.
+| Event | Direction | Description |
+|---|---|---|
+| `comment:new` | Server → Client | Broadcasts new comment to video room |
+| `join:room` | Client → Server | Join a video's chat room |
+| `leave:room` | Client → Server | Leave a video's chat room |
 
-## List of API Endpoints
+## Getting Started
 
-### 1. Video Thumbnail List - GET
+```bash
+# 1. Install dependencies
+npm install
 
-- **Endpoint:** `/api/videos`
-- **Description:** Fetches a list of all videos with their thumbnail information.
-- **Response:** An array of video objects, each containing `videoID`, `urlImageThumbnail`, and `titleImageThumbnail`.
-- **Arguments/Payloads:** You can use the `search` query parameter to perform a case-insensitive search for videos. For example, `/api/videos?search=Video1` will fetch all videos with `videoID` or `titleImageThumbnail` containing "Video1".
+# 2. Configure environment
+cp .env.example .env
+# Edit .env with your MongoDB Atlas connection string
 
-### 2. Video Details with VideoID - GET
+# 3. Seed sample data (optional)
+npm run seed
 
-- **Endpoint:** `/api/videos/:videoId`
-- **Description:** Fetches the details of a specific video by its `videoId`.
-- **Response:** A video object containing `videoID`, `urlImageThumbnail`, and `titleImageThumbnail`.
+# 4. Start development server
+npm run dev          # Runs at http://localhost:3001
+```
 
-### 3. Product List - GET
+### Available Scripts
 
-- **Endpoint:** `/api/products`
-- **Description:** Fetches a list of all products related to videos.
-- **Response:** An array of product objects, each containing `productID`, `urlProduct`, `titleProduct`, `priceProduct`, and `videoID`.
-- **Arguments/Payloads:** You can use the `search` query parameter to perform a case-insensitive search for products. For example, `/api/products?search=Product1` will fetch all products with `productID` or `titleProduct` containing "Product1". You can also use the `videoID` query parameter to filter the products by the ID of the video they are related to. For example, `/api/products?videoID=Video1` will fetch all products related to "Video1".
+| Script | Command | Description |
+|---|---|---|
+| `npm run dev` | `ts-node-dev` | Dev server with hot reload |
+| `npm run build` | `tsc` | Compile TypeScript to `dist/` |
+| `npm start` | `node dist/index.js` | Run compiled production build |
+| `npm run seed` | `ts-node` | Seed database with sample data |
 
-### 4. Product Details with ProductID - GET
+---
 
-- **Endpoint:** `/api/products/:productId`
-- **Description:** Fetches the details of a specific product by its `productId`.
-- **Response:** A product object containing `productID`, `urlProduct`, `titleProduct`, `priceProduct`, and `videoID`.
-
-### 5. Comment List - GET
-
-- **Endpoint:** `/api/comments`
-- **Description:** Fetches a list of all comments for videos.
-- **Response:** An array of comment objects, each containing `username`, `comment`, `timestamp`, and `videoID`.
-- **Arguments/Payloads:** You can use the `search` query parameter to perform a case-insensitive search for comments. For example, `/api/comments?search=Video1` will fetch all comments with `videoID` containing "Video1". You can also use the `videoID` query parameter to filter the comments by the ID of the video they are related to. For example, `/api/comments?videoID=Video1` will fetch all comments related to "Video1".
-
-### 6. Submit Comment - POST
-
-- **Endpoint:** `/api/submit-comment`
-- **Description:** Submits a new comment for a video.
-- **Payload:** An object containing `username`, `comment`, and `videoID`.
-  Example Request:
-  ```json
-  POST /api/submit-comment
-  Content-Type: application/json
-  
-  {
-    "username": "JohnDoe",
-    "comment": "Video dan produknya keren!",
-    "videoID": "Video1"
-  }
-  ```
-
-- **Response:** A success message if the comment is submitted successfully.
-  Example Response:
-  ```json
-  {
-    "message": "Comment submitted successfully",
-    "comment": {
-      "username": "JohnDoe",
-      "comment": "Video dan produknya keren!",
-      "videoID": "Video1",
-      "timestamp": "2023-07-28T12:34:56.789Z"
-    }
-  }
-  ```
-
-## How to Run Locally
-
-To run the backend API locally on your machine, follow these steps:
-
-1. Clone this repository to your local machine.
-2. Install Node.js and npm if you haven't already.
-3. Install the required dependencies by running `npm install` in the project root directory.
-4. Set up a MongoDB database locally or use a cloud-based service and update the `.env` file with the appropriate `DATABASE_URL`.
-5. Start the server by running `npm start`. The server will start running at `http://localhost:3000`.
-
-Once the server is running, you can use a tool like Postman to test the API endpoints and interact with the backend.
+<div align="center">
+  by <a href="https://github.com/anjasopo">Anjas Susetya</a>
+</div>
