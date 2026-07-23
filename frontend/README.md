@@ -1,227 +1,121 @@
-<h1 align="center">Tokopedia Play Clone</h1>
+<h1 align="center">Tokopedia Play Frontend v2.0</h1>
 
-<p align="center">A video streaming platform inspired by Tokopedia's design, showcasing videos, products, and interactive comments.</p>
+<p align="center">
+  <b>Immersive Live Streaming UI built with Vite + React 18 + TypeScript</b>
+</p>
 
-## Table of Contents
-- [Table of Contents](#table-of-contents)
-- [Introduction](#introduction)
-- [Features](#features)
-  - [Frontend](#frontend)
-  - [Backend](#backend)
-- [Custom Hooks](#custom-hooks)
-  - [useComment](#usecomment)
-  - [useFetch](#usefetch)
-- [Bonus Features](#bonus-features)
-- [Technical Stack](#technical-stack)
-  - [Frontend](#frontend-1)
-  - [Backend](#backend-1)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the Application](#running-the-application)
-- [API](#api)
-  - [Video API](#video-api)
-  - [Product API](#product-api)
-  - [Comment API](#comment-api)
-- [Database](#database)
-- [Backend](#backend-2)
-- [Frontend](#frontend-2)
-- [Contributing](#contributing)
-- [License](#license)
+<p align="center">
+  <img src="https://img.shields.io/badge/Vite-5.2-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/React-18.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-5.4-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+</p>
 
-## Introduction
+<p align="center">
+  <a href="https://tokopedia-play.netlify.app"><img src="https://img.shields.io/badge/🌐_Live_Demo-Netlify-00C7B7?style=flat-square" alt="Live Demo"></a>
+</p>
 
-Tokopedia Play Clone is a video streaming platform that brings the immersive experience of Tokopedia's video content to life. This project replicates key features of Tokopedia Play, including videos, products, comments, and more.
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Vite 5.2 | Build tool & dev server |
+| React 18 | UI framework |
+| TypeScript 5.4 | Type safety |
+| TanStack Query v5 | Server state & caching |
+| Tailwind CSS 3.4 | Utility-first styling |
+| DaisyUI 4 | Component library |
+| Socket.IO Client | Real-time chat |
+| React Router v6 | Client-side routing |
+| Lucide React | Icon library |
+| Axios | HTTP client |
+
+## Architecture
+
+```
+src/
+├── api/              # Typed Axios API clients (video, product, comment)
+├── components/
+│   ├── comment/      # LiveChatOverlay (real-time chat stream)
+│   ├── common/       # ErrorBoundary, LoadingSpinner
+│   ├── layout/       # Navbar, Footer, Layout wrapper
+│   ├── product/      # ProductCard with price & discount badge
+│   └── video/        # LiveVideoPlayer, VideoCard, PinnedProductCard
+├── hooks/            # useSocketComments (Socket.IO + TanStack Query)
+├── pages/            # Home, VideoDetail, VideoSearch, NotFound
+├── router/           # AppRouter (React Router v6)
+├── types/            # TypeScript interfaces (Video, Product, Comment)
+└── utils/            # formatPrice, formatNumber, constants
+```
 
 ## Features
 
-### Frontend
+### 🎬 Immersive Live Room
 
-1. **Home Page:** Discover and explore a curated collection of videos with captivating thumbnail images from YouTube.
-2. **Video Detail Page:** Immerse yourself in the world of a specific video with an embedded YouTube player, related products, comments, and an interactive comment submission form.
-3. **Comment Submission:** Express your thoughts and opinions by submitting comments, complete with your name and comment content.
-4. **Real-time Comments:** Stay engaged with real-time comment updates using WebSocket or server-side events.
-5. **User Profile:** Personalize your experience with a user profile picture and username, displayed conveniently at the left comment.
-6. **Search Functionality:** Seamlessly discover content with an intuitive search bar in the Navbar.
+- **Live Video HUD** — Overlaid controls with blinking `LIVE` badge, real-time viewer counter, and channel profile.
+- **Floating Hearts** — Animated heart particles on like button press.
+- **Pinned Product Overlay** — Featured product card floating over video with discount tag and quick-buy CTA.
+- **Tabbed Product & Chat Panel** — Switch between product carousel and live chat.
 
-### Backend
+### 💬 Real-time Live Chat
 
-1. **Video API:** Access a wide range of videos, each with detailed information.
-2. **Product API:** Explore a diverse collection of products, each with comprehensive details.
-3. **Comment API:** Engage with comments for videos and contribute your insights.
+- Socket.IO integration for instant comment broadcasting.
+- User badges: _Top Spender_, _Verified Buyer_, _Penonton Setia_.
+- Auto-scroll with smooth animations.
 
-## Custom Hooks
+### 🏠 Home Discovery
 
-This project utilizes custom hooks to manage and encapsulate specific functionalities that are reused across multiple components. Custom hooks are a powerful way to share stateful logic and make your code more organized and modular.
+- Video thumbnail grid with live indicator badges.
+- Category filter tabs (Semua, Live, Elektronik, Fashion, dll).
+- Search functionality across video titles.
 
-### useComment
+## Design System
 
-The `useComment` hook handles the logic for posting comments and fetching comments related to a specific video. It abstracts the process of making POST and GET requests for comments using the Axios library.
-
-Here's an example of how the `useComment` hook is used in the `VideoDetail` component to manage comments for a specific video:
-
-```jsx
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import useComment from "../hooks/useComment";
-
-const VideoDetail = () => {
-  let { idData } = useParams();
-  const { comments, postingError, postComment, fetchComments } = useComment(idData);
-
-  // Rest of your component code...
-};
-
-export default VideoDetail;
-```
-
-### useFetch
-
-The `useFetch` hook is used to fetch data from an API endpoint. It abstracts the process of making a GET request using the Axios library and provides the fetched data, loading state, and error state.
-
-Here's an example of how the `useFetch` hook is used in the `Home` component to fetch a list of videos:
-
-```jsx
-import React from "react";
-import useFetch from "../hooks/useFetch";
-
-const Home = () => {
-  const { data, loading, error } = useFetch(
-    `${process.env.REACT_APP_BASE_URL}/api/videos`
-  );
-
-  // Rest of your component code...
-};
-
-export default Home;
-```
-
-These custom hooks provide a clean and efficient way to manage complex functionality within your components.
-
-For more details about the implementation of these custom hooks and how they work, you can refer to the respective hook files in the `src/hooks` directory.
-
-## Bonus Features
-
-1. **User Profile Picture and Username:** Elevate the user experience by displaying user profile pictures and usernames.
-2. **Real-time Comment Updates:** Elevate the interactivity with real-time comment updates, offering an engaging and dynamic platform.
-3. **Search Functionality:** Enhance content discoverability through a robust search functionality.
-
-## Technical Stack
-
-### Frontend
-
-- React.js
-- React Router
-- Tailwind CSS
-- DaisyUI
-- React Query
-
-### Backend
-
-- Node.js
-- Express.js
-- MongoDB Atlas
-- WebSocket or Server-Side Events
-- Nodemon
+| Token | Value |
+|---|---|
+| Primary Color | `#03AC0E` (Tokopedia Green) |
+| Font Family | Plus Jakarta Sans, Inter |
+| Theme | Dark mode (DaisyUI custom) |
+| Effects | Glassmorphism, micro-animations |
 
 ## Getting Started
 
-### Prerequisites
+```bash
+# 1. Install dependencies
+npm install
 
-- Node.js and npm installed on your machine.
-- MongoDB Atlas database.
+# 2. Configure environment
+cp .env.example .env
 
-### Installation
+# 3. Start development server
+npm run dev          # Runs at http://localhost:3000
+```
 
-1. Clone this repository to your local machine.
-2. Navigate to the frontend folder and run `npm install`.
-3. Navigate to the backend folder and run `npm install`.
+### Environment Variables
 
-### Running the Application
+| Variable | Description | Default |
+|---|---|---|
+| `VITE_API_BASE_URL` | Backend API base URL | `http://localhost:3001` |
+| `VITE_WS_URL` | WebSocket server URL | `http://localhost:3001` |
 
-1. Start the frontend application:
-   - Navigate to the frontend folder.
-   - Run `npm start`.
+### Available Scripts
 
-2. Start the backend server:
-   - Navigate to the backend folder.
-   - Run `npm start` or `node index.js`
+| Script | Command | Description |
+|---|---|---|
+| `npm run dev` | `vite` | Dev server with HMR |
+| `npm run build` | `tsc && vite build` | Typecheck & production build |
+| `npm run preview` | `vite preview` | Preview production build |
 
-   for automatic server restart during development.
+## Deployment
 
-## API
+Frontend deployed on **Netlify**: [tokopedia-play.netlify.app](https://tokopedia-play.netlify.app)
 
-The backend provides the following API endpoints:
+For backend API details, see [backend/README.md](../backend/README.md).
 
-### Video API
-
-- `GET /api/videos`: Fetch a list of videos with thumbnails.
-
-  Example: `https://tokpedplay.cyclic.cloud/api/videos`
-
-- `GET /api/videos/:videoId`: Fetch details of a specific video.
-
-  Example: `https://tokpedplay.cyclic.cloud/api/videos/Video1`
-
-### Product API
-
-- `GET /api/products`: Fetch a list of products.
-
-  Example: `https://tokpedplay.cyclic.cloud/api/products`
-
-- `GET /api/products/:productId`: Fetch details of a specific product.
-
-  Example: `https://tokpedplay.cyclic.cloud/api/products/Product1`
-
-### Comment API
-
-- `GET /api/comments`: Fetch comments for videos.
-
-  Example: `https://tokpedplay.cyclic.cloud/api/comments`
-
-- `GET /api/comments?videoID=Video1`: Fetch comments related to "Video1".
-
-  Example: `https://tokpedplay.cyclic.cloud/api/comments?videoID=Video1`
-
-- `POST /api/submit-comment`: Submit a new comment.
-
-  Example: `https://tokpedplay.cyclic.cloud/api/submit-comment`
-
-  Payload Example:
-  ```json
-  {
-    "username": "JohnDoe",
-    "comment": "Video dan produknya keren!",
-    "videoID": "Video1"
-  }
-  ```
-
-## Database
-
-This project utilizes MongoDB Atlas, a cloud-based database service, to store and manage data efficiently. MongoDB Atlas offers scalability, security, and ease of use, making it an ideal choice for the backend data storage.
-
-## Backend
-
-The backend server is accessible at:
-
-https://tokpedplay.cyclic.cloud
-
-For more in-depth information about the backend implementation, including API endpoints, database schema, and technical details, please refer to the [backend/README.md](../backend/README.md) file.
-
-## Frontend
-
-The frontend of this project has been deployed on Netlify. You can access the frontend at the following URL:
-
-[https://tokopedia-play.netlify.app](https://tokopedia-play.netlify.app)
-
-## Contributing
-
-Contributions are welcome! Feel free to create pull requests or open issues.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+---
 
 <div align="center">
-  Made with ❤️ by [Anjas Susetya](https://github.com/anjasopo)
+  by <a href="https://github.com/anjasopo">Anjas Susetya</a>
 </div>
