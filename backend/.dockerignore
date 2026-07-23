@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+npm-debug.log
+.git
+.agents
+.claude
+CLAUDE.md
+skills-lock.json
