@@ -1,4 +1,5 @@
 {
+  "_comment": "Trigger Vercel build v2.0",
   "outputDirectory": ".",
   "rewrites": [
     {
