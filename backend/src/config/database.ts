@@ -8,7 +8,11 @@ export const connectDatabase = async (): Promise<typeof mongoose> => {
       return mongoose;
     }
     mongoose.set('strictQuery', true);
-    const conn = await mongoose.connect(config.databaseUrl);
+    const conn = await mongoose.connect(config.databaseUrl, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+      maxPoolSize: 10,
+    });
     logger.info(`[MongoDB] Database connected successfully to ${conn.connection.host}`);
     return conn;
   } catch (error: any) {
