@@ -11,7 +11,7 @@ export const Home: React.FC = () => {
   const [searchQuery] = useState('');
 
   const {
-    data: videos = [],
+    data: videosData = [],
     isLoading,
     isError,
     error,
@@ -21,9 +21,11 @@ export const Home: React.FC = () => {
     queryFn: () => getVideos(searchQuery),
   });
 
+  const videos = Array.isArray(videosData) ? videosData : [];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
-      {/* Hero Banner Banner Tokopedia Play */}
+      {/* Hero Banner Tokopedia Play */}
       <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-gray-900 to-emerald-900 border border-emerald-500/30 p-6 sm:p-10 shadow-2xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-tokopedia-500/10 rounded-full blur-3xl pointer-events-none" />
         
@@ -111,7 +113,7 @@ export const Home: React.FC = () => {
         {!isLoading && !isError && videos.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {videos.map((video) => (
-              <VideoCard key={video._id} video={video} />
+              <VideoCard key={video._id || video.videoID} video={video} />
             ))}
           </div>
         )}
